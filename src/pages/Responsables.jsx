@@ -150,7 +150,7 @@ const Responsables = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 transition-all duration-300">
+      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 transition-all duration-300 pb-20 sm:pb-6">
         <div className="max-w-7xl mx-auto">
           {/* Header - Adaptado para móvil */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -462,7 +462,7 @@ const Responsables = () => {
         />
       )}
 
-      {/* Panel lateral - Adaptado para móvil */}
+      {/* Panel lateral - Adaptado para móvil - SIN ESPACIO EXTRA */}
       <div
         className={`
           fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70]
@@ -471,7 +471,8 @@ const Responsables = () => {
         `}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+          {/* Header - fijo */}
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
             <h2 className="text-xl font-bold text-gray-900">
               {editingId ? 'Editar Responsable' : 'Crear Responsable'}
             </h2>
@@ -483,66 +484,71 @@ const Responsables = () => {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre *
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  value={formData.nombre}
-                  onChange={handleChange}
-                  required
-                  placeholder="Ej: Juan Pérez"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
+          {/* Contenido - que ocupa todo el espacio disponible */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+              {/* Campos del formulario - scrollable */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nombre *
+                  </label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: Juan Pérez"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Área
+                  </label>
+                  <input
+                    type="text"
+                    name="area"
+                    value={formData.area}
+                    onChange={handleChange}
+                    placeholder="Ej: Tecnología"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cargo
+                  </label>
+                  <input
+                    type="text"
+                    name="cargo"
+                    value={formData.cargo}
+                    onChange={handleChange}
+                    placeholder="Ej: Gerente"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Punto
+                  </label>
+                  <input
+                    type="text"
+                    name="punto"
+                    value={formData.punto}
+                    onChange={handleChange}
+                    placeholder="Ej: Punto 1"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Área
-                </label>
-                <input
-                  type="text"
-                  name="area"
-                  value={formData.area}
-                  onChange={handleChange}
-                  placeholder="Ej: Tecnología"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Cargo
-                </label>
-                <input
-                  type="text"
-                  name="cargo"
-                  value={formData.cargo}
-                  onChange={handleChange}
-                  placeholder="Ej: Gerente"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Punto
-                </label>
-                <input
-                  type="text"
-                  name="punto"
-                  value={formData.punto}
-                  onChange={handleChange}
-                  placeholder="Ej: Punto 1"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div className="pt-4">
+              {/* Botón - fijo en la parte inferior */}
+              <div className="p-4 sm:p-6 border-t border-gray-200 flex-shrink-0 bg-white">
                 <button
                   type="submit"
                   disabled={loading}

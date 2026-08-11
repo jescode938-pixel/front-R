@@ -161,7 +161,7 @@ const Equipos = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 transition-all duration-300">
+      <div className="min-h-screen bg-gray-50 p-4 sm:p-6 transition-all duration-300 pb-20 sm:pb-6">
         <div className="max-w-7xl mx-auto">
           {/* Header - Adaptado para móvil */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -504,7 +504,7 @@ const Equipos = () => {
         />
       )}
 
-      {/* Panel Crear/Editar Equipo - Adaptado para móvil */}
+      {/* Panel Crear/Editar Equipo - Adaptado para móvil - SIN ESPACIO EXTRA */}
       <div
         className={`
           fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[70]
@@ -513,7 +513,8 @@ const Equipos = () => {
         `}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+          {/* Header - fijo */}
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
             <h2 className="text-xl font-bold text-gray-900">
               {editingId ? 'Editar Equipo' : 'Crear Equipo'}
             </h2>
@@ -525,84 +526,89 @@ const Equipos = () => {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre del Equipo *
-                </label>
-                <input
-                  type="text"
-                  name="equipo"
-                  value={formData.equipo}
-                  onChange={handleChange}
-                  required
-                  placeholder="Ej: Laptop Dell XPS"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
+          {/* Contenido - que ocupa todo el espacio disponible */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+              {/* Campos del formulario - scrollable */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nombre del Equipo *
+                  </label>
+                  <input
+                    type="text"
+                    name="equipo"
+                    value={formData.equipo}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: Laptop Dell XPS"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Marca
+                  </label>
+                  <input
+                    type="text"
+                    name="marca"
+                    value={formData.marca}
+                    onChange={handleChange}
+                    placeholder="Ej: Dell, HP, Lenovo"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Modelo *
+                  </label>
+                  <input
+                    type="text"
+                    name="modelo"
+                    value={formData.modelo}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: XPS 13, EliteBook 840"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Serial
+                  </label>
+                  <input
+                    type="text"
+                    name="serial"
+                    value={formData.serial}
+                    onChange={handleChange}
+                    placeholder="Ej: SN123456789"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Estado
+                  </label>
+                  <select
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
+                  >
+                    <option value="DISPONIBLE">Disponible</option>
+                    <option value="ASIGNADO">Asignado</option>
+                    <option value="MANTENIMIENTO">Mantenimiento</option>
+                    <option value="BAJA">Baja</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Marca
-                </label>
-                <input
-                  type="text"
-                  name="marca"
-                  value={formData.marca}
-                  onChange={handleChange}
-                  placeholder="Ej: Dell, HP, Lenovo"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Modelo *
-                </label>
-                <input
-                  type="text"
-                  name="modelo"
-                  value={formData.modelo}
-                  onChange={handleChange}
-                  required
-                  placeholder="Ej: XPS 13, EliteBook 840"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Serial
-                </label>
-                <input
-                  type="text"
-                  name="serial"
-                  value={formData.serial}
-                  onChange={handleChange}
-                  placeholder="Ej: SN123456789"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Estado
-                </label>
-                <select
-                  name="estado"
-                  value={formData.estado}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 transition-all text-sm sm:text-base"
-                >
-                  <option value="DISPONIBLE">Disponible</option>
-                  <option value="ASIGNADO">Asignado</option>
-                  <option value="MANTENIMIENTO">Mantenimiento</option>
-                  <option value="BAJA">Baja</option>
-                </select>
-              </div>
-
-              <div className="pt-4">
+              {/* Botón - fijo en la parte inferior */}
+              <div className="p-4 sm:p-6 border-t border-gray-200 flex-shrink-0 bg-white">
                 <button
                   type="submit"
                   disabled={loading}
