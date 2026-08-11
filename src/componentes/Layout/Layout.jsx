@@ -43,18 +43,25 @@ const Layout = () => {
 
   // Calcular el margen izquierdo basado en el estado del sidebar
   const getMarginLeft = () => {
-    if (isMobile) return 'ml-0';
-    // Cuando el sidebar está abierto: 256px, cuando está cerrado: 72px (barra reducida)
-    return isSidebarOpen ? 'lg:ml-64' : 'lg:ml-[72px]';
+    if (isMobile) return 'ml-0'; // En móvil no hay margen
+    // Cuando el sidebar está abierto: 260px, cuando está cerrado: 70px (barra reducida)
+    return isSidebarOpen ? 'lg:ml-[260px]' : 'lg:ml-[70px]';
+  };
+
+  // Calcular el padding inferior en móvil para dejar espacio a los tabs
+  const getPaddingBottom = () => {
+    return isMobile ? 'pb-20' : 'pb-0'; // 80px para los tabs
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Sidebar - Solo visible en desktop */}
       <Sidebar />
       
       <main className={`
         transition-all duration-300 ease-in-out
         ${getMarginLeft()}
+        ${getPaddingBottom()}
         min-h-screen
       `}>
         <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6 lg:py-8 max-w-7xl mx-auto">
