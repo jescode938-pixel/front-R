@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, X, Package, User, ChevronRight } from 'lucide-react';
 import { menuItems } from './menuConfig';
 
-// Definir qué items NO se muestran en móvil
+
 const ITEMS_OCULTOS_MOVIL = ['Asignaciones', 'Accesorios', 'Insumos'];
 
 const Sidebar = () => {
@@ -139,9 +139,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* ❌ Botón flotante ELIMINADO - Ya no se muestra */}
-
-        {/* Sidebar flotante - Solo se abre cuando se hace clic en un tab o se navega */}
+      
         {isOpen && (
           <>
             <div
@@ -243,7 +241,7 @@ const Sidebar = () => {
     );
   }
 
-  // 📱 Desktop - Sidebar completo
+ 
   return (
     <aside
       className={`
@@ -256,7 +254,7 @@ const Sidebar = () => {
         ${!isOpen && 'overflow-x-hidden'}
       `}
     >
-      {/* Header del Sidebar */}
+     
       {isOpen ? (
         <div className="p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
           <div className="flex items-center justify-between">
@@ -354,7 +352,6 @@ const Sidebar = () => {
         </ul>
       </nav>
 
-      {/* Footer del Sidebar - Mejorado */}
       {isOpen ? (
         <div className="p-3 sm:p-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
           {/* Información del usuario */}

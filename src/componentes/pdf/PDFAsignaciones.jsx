@@ -160,30 +160,47 @@ const styles = StyleSheet.create({
     marginBottom: 1.5,
     paddingLeft: 5,
   },
-  firmaContainer: {
-    marginTop: 12,
+  // ============================================
+  // ESTILOS PARA FIRMAS (3 FIRMAS)
+  // ============================================
+  firmasContainer: {
+    marginTop: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  firmaBox: {
     alignItems: 'center',
+    flex: 1,
   },
   firmaLine: {
-    width: '50%',
+    width: '80%',
     borderBottomWidth: 1,
     borderBottomColor: '#000',
     marginBottom: 2,
+    marginTop: 20,
   },
-  firmaText: {
-    fontSize: 8,
+  firmaLabel: {
+    fontSize: 7,
     fontWeight: 'bold',
     color: '#333',
-  },
-  firmaSubtext: {
-    fontSize: 6,
-    color: '#888',
     marginTop: 2,
   },
+  firmaSubtext: {
+    fontSize: 5.5,
+    color: '#888',
+    marginTop: 1,
+  },
   firmaFecha: {
-    fontSize: 7,
+    fontSize: 6,
     color: '#555',
+    marginTop: 2,
+  },
+  firmaNombre: {
+    fontSize: 6.5,
+    color: '#444',
     marginTop: 4,
+    fontWeight: 'bold',
   },
   footer: {
     position: 'absolute',
@@ -272,21 +289,27 @@ const agruparPorResponsable = (asignaciones) => {
 // ============================================
 // COMPONENTE PDFDocument
 // ============================================
-const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
+const PDFDocument = ({ 
+  asignaciones, 
+  responsable, 
+  imagenBase64,
+  fechaFirma = null,
+}) => {
   // Agrupar asignaciones por responsable
   const gruposAgrupados = agruparPorResponsable(asignaciones);
   const responsables = Object.keys(gruposAgrupados);
+  
+  // Fecha para las firmas
+  const fechaFirmaFormateada = fechaFirma || formatDateFooter();
   
   // ============================================
   // FUNCIONES PARA OBTENER DATOS CON LOS NOMBRES CORRECTOS
   // ============================================
   const obtenerMarca = (asignacion) => {
-    // El campo correcto es equipo_marca
     return asignacion.equipo_marca || asignacion.marca || '';
   };
 
   const obtenerModelo = (asignacion) => {
-    // El campo correcto es equipo_modelo
     return asignacion.equipo_modelo || asignacion.modelo || '';
   };
 
@@ -330,7 +353,6 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
     }
   });
 
-  // Debug: Mostrar qué columnas se van a mostrar
   console.log('📊 Columnas con datos:', columnasConDatos);
 
   // ============================================
@@ -343,33 +365,27 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
       { key: 'equipo', label: 'Equipo', width: '12%' },
     ];
     
-    // Agregar marca solo si tiene datos
     if (columnasConDatos.marca) {
       columnas.push({ key: 'marca', label: 'Marca', width: '10%' });
     }
     
-    // Agregar modelo solo si tiene datos
     if (columnasConDatos.modelo) {
       columnas.push({ key: 'modelo', label: 'Modelo', width: '10%' });
     }
     
-    // Agregar accesorio solo si tiene datos
     if (columnasConDatos.accesorio) {
       columnas.push({ key: 'accesorio', label: 'Accesorio', width: '12%' });
     }
     
-    // Agregar referencia solo si tiene datos
     if (columnasConDatos.referencia) {
       columnas.push({ key: 'referencia', label: 'Referencia', width: '12%' });
     }
     
-    // Columnas fijas al final
     columnas.push(
       { key: 'estado', label: 'Estado', width: '10%' },
       { key: 'fecha', label: 'Fecha Asig.', width: '15%' }
     );
     
-    // Redistribuir el ancho
     const totalWidth = columnas.reduce((sum, col) => sum + parseFloat(col.width), 0);
     const remainingWidth = 100 - totalWidth;
     if (remainingWidth > 0) {
@@ -463,7 +479,6 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
       const asignacionesDelGrupo = gruposAgrupados[responsableActual];
       const cantidadEquipos = asignacionesDelGrupo.length;
       
-      // Cabecera del grupo
       filas.push(
         <View key={`grupo-header-${responsableActual}`} style={styles.grupoHeader}>
           <Text style={[styles.grupoHeaderText, { flex: 1 }]}>
@@ -475,25 +490,14 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
         </View>
       );
       
-      // Renderizar cada asignación del grupo
       asignacionesDelGrupo.forEach((asignacion, idx) => {
         const estadoColors = getEstadoColor(asignacion.estado);
         const isEven = (indexGlobal % 2 === 0);
         
-        // Obtener valores con los campos correctos
         const marca = obtenerMarca(asignacion);
         const modelo = obtenerModelo(asignacion);
         const accesorio = obtenerAccesorio(asignacion);
         const referencia = obtenerReferencia(asignacion);
-        
-        // Debug
-        console.log(`📌 Asignación ${indexGlobal + 1}:`, {
-          equipo: asignacion.equipo,
-          marca: marca,
-          modelo: modelo,
-          accesorio: accesorio,
-          referencia: referencia
-        });
         
         filas.push(
           <View 
@@ -503,7 +507,6 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
               isEven && styles.tableRowEven
             ]}
           >
-            {/* Renderizar cada celda según las columnas definidas */}
             {columnas.map((col) => {
               let valor = '';
               let esEstado = false;
@@ -569,7 +572,6 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
         indexGlobal++;
       });
       
-      // Separador entre grupos
       if (grupoIndex < responsables.length - 1) {
         filas.push(
           <View key={`separator-${grupoIndex}`} style={{ height: 1, backgroundColor: '#ccc', marginVertical: 1 }} />
@@ -657,21 +659,41 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
           </Text>
         </View>
 
-        {/* FIRMA */}
-        <View style={styles.firmaContainer}>
-          <Text style={styles.firmaText}>FIRMA DEL RESPONSABLE</Text>
-          <View style={styles.firmaLine} />
-          <Text style={styles.firmaSubtext}>
-            (Acepto los términos y condiciones establecidos en este documento)
+        {/* ============================================ */}
+        {/* SECCIÓN DE FIRMAS - 3 FIRMAS */}
+        {/* ============================================ */}
+        <View style={styles.firmasContainer}>
+          {/* FIRMA DE QUIEN ENTREGA - SIN NOMBRE */}
+          <View style={styles.firmaBox}>
+            <View style={styles.firmaLine} />
+            <Text style={styles.firmaLabel}>FIRMA DE QUIEN ENTREGA</Text>
+            <Text style={styles.firmaSubtext}>Nombre completo</Text>
+            <Text style={styles.firmaFecha}>Fecha: {fechaFirmaFormateada}</Text>
+          </View>
+
+          {/* FIRMA DEL RESPONSABLE - CON NOMBRE */}
+          <View style={styles.firmaBox}>
+            <View style={styles.firmaLine} />
+            <Text style={styles.firmaLabel}>FIRMA DEL RESPONSABLE</Text>
+            <Text style={styles.firmaNombre}>{responsable || '________________________'}</Text>
+            <Text style={styles.firmaSubtext}>Nombre completo</Text>
+            <Text style={styles.firmaFecha}>Fecha: {fechaFirmaFormateada}</Text>
+          </View>
+
+          {/* FIRMA DEL LÍDER DE ÁREA - SIN NOMBRE */}
+          <View style={styles.firmaBox}>
+            <View style={styles.firmaLine} />
+            <Text style={styles.firmaLabel}>FIRMA LÍDER DE ÁREA</Text>
+            <Text style={styles.firmaSubtext}>Nombre completo</Text>
+            <Text style={styles.firmaFecha}>Fecha: {fechaFirmaFormateada}</Text>
+          </View>
+        </View>
+
+        {/* Nota adicional debajo de firmas */}
+        <View style={{ marginTop: 10, alignItems: 'center' }}>
+          <Text style={{ fontSize: 5.5, color: '#999' }}>
+            Las firmas validan la entrega, recepción y supervisión de los equipos asignados
           </Text>
-          <Text style={styles.firmaFecha}>
-            Firma: ________________________________
-          </Text>
-          {responsable && (
-            <Text style={[styles.firmaFecha, { marginTop: 3 }]}>
-              Responsable: {responsable}
-            </Text>
-          )}
         </View>
 
         {/* FOOTER */}
@@ -687,13 +709,26 @@ const PDFDocument = ({ asignaciones, responsable, imagenBase64 }) => {
 // ============================================
 // COMPONENTE PRINCIPAL
 // ============================================
-const PDFAsignaciones = ({ asignaciones, responsable, onClose }) => {
+const PDFAsignaciones = ({ 
+  asignaciones, 
+  responsable, 
+  onClose,
+  imagenBase64: imagenBase64Prop,
+  fechaFirma = null,
+}) => {
   const [imagenBase64, setImagenBase64] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [errorImagen, setErrorImagen] = useState(false);
 
   useEffect(() => {
     const cargarImagen = async () => {
+      // Si ya viene la imagen como prop, usarla
+      if (imagenBase64Prop) {
+        setImagenBase64(imagenBase64Prop);
+        setCargando(false);
+        return;
+      }
+
       const asignacionConImagen = asignaciones.find(a => a.imagen_url);
       const imagenUrl = asignacionConImagen?.imagen_url;
       
@@ -721,7 +756,7 @@ const PDFAsignaciones = ({ asignaciones, responsable, onClose }) => {
     };
 
     cargarImagen();
-  }, [asignaciones]);
+  }, [asignaciones, imagenBase64Prop]);
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
@@ -759,6 +794,7 @@ const PDFAsignaciones = ({ asignaciones, responsable, onClose }) => {
                 asignaciones={asignaciones} 
                 responsable={responsable}
                 imagenBase64={imagenBase64}
+                fechaFirma={fechaFirma}
               />}
               fileName={responsable 
                 ? `Compromiso_Asignacion_${responsable.replace(/\s+/g, '_')}.pdf`
@@ -789,6 +825,7 @@ const PDFAsignaciones = ({ asignaciones, responsable, onClose }) => {
                 asignaciones={asignaciones} 
                 responsable={responsable}
                 imagenBase64={imagenBase64}
+                fechaFirma={fechaFirma}
               />
             </PDFViewer>
           )}

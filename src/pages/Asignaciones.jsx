@@ -226,7 +226,8 @@ const Asignaciones = () => {
     setPdfData({
       asignaciones: asignacionesFiltradas,
       responsable: responsableNombre,
-      imagenBase64: imagenBase64
+      imagenBase64: imagenBase64,
+      fechaFirma: new Date().toISOString().split('T')[0],
     });
     setShowPDF(true);
   };
@@ -1160,6 +1161,7 @@ const Asignaciones = () => {
           responsable={pdfData.responsable}
           imagenBase64={pdfData.imagenBase64}
           onClose={() => setShowPDF(false)}
+           fechaFirma={pdfData.fechaFirma}
         />
       )}
 
